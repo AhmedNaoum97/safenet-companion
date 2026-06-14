@@ -1,0 +1,83 @@
+/*Imported Tailwind CSS */
+@import "tailwindcss";
+ 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+ 
+html {
+  scroll-behavior: smooth;
+}
+ 
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #e5e7eb;
+  background:
+    radial-gradient(circle at top, rgba(56, 189, 248, 0.12), transparent 30%),
+    linear-gradient(180deg, #020617 0%, #081225 45%, #020617 100%);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+ 
+#root {
+  min-height: 100vh;
+}
+ 
+/* base layout used by every <main className="page"> */
+.page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+ 
+a {
+  color: inherit;
+  text-decoration: none;
+}
+ 
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+ 
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+ 
+.glass-card {
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(14px);
+}
+ 
+.section-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+ 
+.section-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+  font-weight: 800;
+  color: #f8fafc;
+}
+ 
+.section-subtitle {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #cbd5e1;
+}

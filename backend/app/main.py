@@ -1,12 +1,21 @@
 # Necessary imports
-from fastapi import FastAPI, HTTPException
 import logging
+import time
+from collections import defaultdict, deque
+
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+
 from app.schemas import ChatRequest, ChatResponse
 from app.llm import generate_reply
-from fastapi.middleware.cors import CORSMiddleware
 
 # Create logger object named safenet, use to write error and diagnostic messages
 logger = logging.getLogger("safenet")
+
+# Rate limit
+RATE_LIMIT = 20
+RATE_WINDOW = 60
+request_log = defaultdict(deque)
 
 # Create application instance with FastAPI
 app = FastAPI()
@@ -15,16 +24,36 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"], # Allowlist, only Vite dev server can call API
-    allow_methods=["GET", "POST"], # Receive and deliver methods only allowed
+    allow_methods=["GET", "POST"], # Only methods we use
     allow_headers=["Content-Type"], # Only header our JSON requests need
 )
 
+
+# Rate limit
+def check_rate_limit(client_ip: str):
+    now = time.time()
+    timestamps = request_log[client_ip]
+
+    # Drop timestamps older than the window (sliding window)
+    while timestamps and now - timestamps[0] > RATE_WINDOW:
+        timestamps.popleft()
+
+    # Too many in the window? Reject.
+    if len(timestamps) >= RATE_LIMIT:
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+
+    # Otherwise record this request
+    timestamps.append(now)
+
+
+# Health check
 @app.get("/api/health")
 def health():
     return {"status": "okay"}
 
 @app.post("/api/chat", response_model=ChatResponse)
-def chat(request: ChatRequest):
+def chat(request: ChatRequest, http_request: Request):
+    check_rate_limit(http_request.client.host)
     try:
         reply = generate_reply(request.message, request.age_group)
         return {"reply": reply}

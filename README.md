@@ -4,8 +4,7 @@ An AI-powered online-safety companion that gives age-appropriate guidance to eve
 
 ## Live Demo
 
-- **Frontend:** _coming soon_
-- **Backend:** _coming soon_
+**Live app:** https://safenet-companion.vercel.app
 
 ## Why It Exists
 

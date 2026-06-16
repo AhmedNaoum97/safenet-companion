@@ -24,8 +24,8 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",
-        "safenet-companion-production.up.railway.app"
+        "http://localhost:5173",
+        "https://safenet-companion.vercel.app"
     ],
     allow_methods=["GET", "POST"], # Only methods we use
     allow_headers=["Content-Type"], # Only header our JSON requests need

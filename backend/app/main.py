@@ -23,7 +23,10 @@ app = FastAPI()
 # Allow only what is needed, following the principle of least privilege
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"], # Allowlist, only Vite dev server can call API
+    allow_origins=[
+        "http://localhost:3000",
+        "safenet-companion-production.up.railway.app"
+    ],
     allow_methods=["GET", "POST"], # Only methods we use
     allow_headers=["Content-Type"], # Only header our JSON requests need
 )

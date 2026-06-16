@@ -114,4 +114,4 @@ safenet-companion/
 
 - Real third-party places API on the Digital Detox page
 - Streaming chat responses
-- Norwegian-language support
+- Norwegian-language support,

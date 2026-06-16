@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useAppStore } from "../state/appStore";
 import type { AgeGroup } from "../state/appStore";
+import { sendChatMessage } from "../services/chatApi";
+
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type Message = {
@@ -101,20 +103,23 @@ function SafetyChatPage() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
-  function sendMessage(text: string) {
+  async function sendMessage(text: string) {
     if (!text.trim() || isTyping) return;
 
     const userMsg: Message = { id: idRef.current++, role: "user", text: text.trim() };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setIsTyping(true);
-
-    // Simulated delay — replaced with real fetch() call next week
-    setTimeout(() => {
-      const reply = getReply(text, group);
+    
+    try {
+      const reply = await sendChatMessage(text.trim(), group);
       setMessages((prev) => [...prev, { id: idRef.current++, role: "assistant", text: reply }]);
+    } catch {
+      const reply = getReply(text, group); // Offline fallback
+      setMessages((prev) => [...prev, { id: idRef.current++, role: "assistant", text: reply }]);
+    } finally {
       setIsTyping(false);
-    }, 1200);
+    }
   }
 
   const groupLabel: Record<string, string> = {
